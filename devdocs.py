@@ -123,8 +123,8 @@ class MainWindow(Gtk.Window):
     def setup_ui(self):
         self.set_title(self.DEFAULT_TITLE)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file(os.path.join(self.settings.app_dir, 'devdocs.png'))
-        self.set_icon(pixbuf)
+        self.logo = GdkPixbuf.Pixbuf.new_from_file(os.path.join(self.settings.app_dir, 'devdocs.png'))
+        self.set_icon(self.logo)
 
         # WebKit2 WebView setup.
         # TODO: after https://bugs.webkit.org/show_bug.cgi?id=127410
@@ -192,6 +192,12 @@ class MainWindow(Gtk.Window):
         key, mod = Gtk.accelerator_parse("<control>f")
         button.add_accelerator('clicked', accel, key, mod, Gtk.AccelFlags.VISIBLE)
 
+        tool_item = Gtk.ToolItem()
+        tool_item.add(button)
+        toolbar.insert(tool_item, -1)
+
+        button = Gtk.ToolButton(Gtk.STOCK_ABOUT)
+        button.connect('clicked', self.on_about)
         tool_item = Gtk.ToolItem()
         tool_item.add(button)
         toolbar.insert(tool_item, -1)
@@ -270,6 +276,21 @@ class MainWindow(Gtk.Window):
 
     def on_refresh(self, btn):
         self.web_view.reload()
+
+    def on_about(self, btn):
+        about = Gtk.AboutDialog()
+        about.set_program_name("DevDocs Shell")
+        about.set_version('1.0')
+        about.set_copyright('2014')
+        about.set_license_type(Gtk.License.BSD)
+        about.set_website('https://github.com/naquad/devdocs-shell')
+        about.set_website_label('DevDocs Shell home')
+        about.set_authors(['Naquad <naquad@gmail.com>'])
+        about.set_logo(self.logo)
+        about.set_comments('A GTK+ shell for http://devdocs.io')
+        about.set_transient_for(self)
+        about.run()
+        about.destroy()
 
     def on_title(self, view, title):
         self.set_title(view.get_property('title') or self.DEFAULT_TITLE)
