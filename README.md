@@ -2,6 +2,10 @@
 
 A shell for [DevDocs](http://devdocs.io).
 
+![Screenshot](http://i.imgur.com/W6Iw0ux.png)
+![Screenshot](http://i.imgur.com/HL1zdXB.png)
+![Screenshot](http://i.imgur.com/wSUny4b.png)
+
 ## Motivation
 
 I liked [DevDocs](http://devdocs.io) and wanted to use it from

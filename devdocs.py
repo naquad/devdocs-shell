@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gi.repository import Gtk, WebKit2, GLib, Gdk, Gio
+from gi.repository import Gtk, WebKit2, GLib, Gdk, Gio, GdkPixbuf
 import json
 import os
 
@@ -56,10 +56,11 @@ class Search(Gtk.HBox):
         self.pack_start(btn, False, False, 0)
 
         btn = Gtk.Button.new_from_icon_name(Gtk.STOCK_CLOSE, Gtk.IconSize.BUTTON)
+        btn.connect('clicked', self.toggle)
         btn.show()
         self.pack_start(btn, False, False, 0)
 
-    def toggle(self):
+    def toggle(self, *unused):
         "show/hide search bar"
 
         if self.is_visible():
@@ -121,6 +122,9 @@ class MainWindow(Gtk.Window):
 
     def setup_ui(self):
         self.set_title(self.DEFAULT_TITLE)
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(os.path.join(self.settings.app_dir, 'devdocs.png'))
+        self.set_icon(pixbuf)
 
         # WebKit2 WebView setup.
         # TODO: after https://bugs.webkit.org/show_bug.cgi?id=127410
@@ -365,6 +369,10 @@ class Application(Gtk.Application):
         self.config.update(state)
         with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
+
+    @property
+    def app_dir(self):
+        return os.path.dirname(os.path.realpath(__file__))
 
     def __getattr__(self, name):
         if name in self.DEFAULT_SETTINGS:
