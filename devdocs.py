@@ -79,13 +79,12 @@ class Search(Gtk.HBox):
 
     def on_keypress(self, entry, evt):
         if evt.keyval == Gdk.KEY_Escape:
-            if evt.state == 0:
-                self.toggle()
+            self.toggle()
         elif evt.keyval == Gdk.KEY_Return or evt.keyval == Gdk.KEY_KP_Enter:
-            if evt.state == 0:
-                self.controller.search_next()
-            elif evt.state & Gdk.ModifierType.SHIFT_MASK:
+            if evt.state & Gdk.ModifierType.SHIFT_MASK != 0:
                 self.controller.search_previous()
+            else:
+                self.controller.search_next()
 
     def search_text(self, text):
         self.controller.search(text, WebKit2.FindOptions.CASE_INSENSITIVE | WebKit2.FindOptions.WRAP_AROUND, GLib.MAXINT32)
